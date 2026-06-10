@@ -4,7 +4,7 @@
 
 The twist that makes it real: a single panel rarely belongs to one instrument. A **Gut Zoomer** spans microbiome sequencing, ELISA, and mass spec. A **Total Tox Burden** needs LC-MS/MS *and* ICP-MS *and* genotyping. So you can't just shove the whole report into one machine — you read the full requisition and split it, aliquot by aliquot.
 
-🎮 **Play:** _[Vercel URL added on deploy]_
+🎮 **Play it live:** **https://vibrant-labs-game.vercel.app**
 
 ![Vibrant Labs — Precision Bench](docs/cover.svg)
 
