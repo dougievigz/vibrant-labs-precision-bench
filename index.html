@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <title>Vibrant Labs — Precision Bench</title>
+  <meta name="description" content="A lab-science routing game. Play a Vibrant Wellness scientist: read each patient report and route every biomarker to the right analyzer — microarray, mass spec, ICP-MS, PCR, ELISA, or chemistry." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230142E2'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23F3F3F3' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%23F3F3F3'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="src/styles.css" />
+</head>
+<body data-screen="loading">
+
+  <!-- ====================== TITLE ====================== -->
+  <section class="screen" id="screen-title">
+    <div class="title-wrap">
+      <div class="brand-row">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span class="logo-word">VIBRANT</span>
+      </div>
+      <h1 class="title-h1">Precision&nbsp;Bench</h1>
+      <p class="title-sub">
+        You're a scientist at the Vibrant lab. Read each patient report, then route
+        every biomarker to the analyzer that can actually run it. Right molecule,
+        right specimen, right machine.
+      </p>
+
+      <div class="title-actions">
+        <button class="btn btn-primary" id="btn-play">Start shift</button>
+        <button class="btn btn-ghost" id="btn-how">How to play</button>
+        <button class="btn btn-ghost" id="btn-codex-title">Lab reference</button>
+      </div>
+
+      <div class="title-meta">
+        <span class="hi-label">Best run</span>
+        <span class="hi-score" id="title-hiscore">—</span>
+      </div>
+
+      <p class="disclaimer">
+        Educational game. Methodologies reflect Vibrant Wellness' real platforms;
+        all such tests are laboratory-developed (LDT) and not FDA-cleared.
+      </p>
+    </div>
+
+    <button class="sound-toggle" id="btn-mute" aria-label="Toggle sound">
+      <span class="sound-on">SOUND ON</span><span class="sound-off">SOUND OFF</span>
+    </button>
+  </section>
+
+  <!-- ====================== SHIFT BRIEF ====================== -->
+  <section class="screen" id="screen-brief">
+    <div class="brief-card">
+      <div class="brief-eyebrow"><span id="brief-shift-no">SHIFT 1</span> · BENCH ASSIGNMENT</div>
+      <h2 class="brief-title" id="brief-title">Orientation</h2>
+      <p class="brief-text" id="brief-text"></p>
+      <div class="brief-stats">
+        <div class="brief-stat"><span class="bs-num" id="brief-count">6</span><span class="bs-lab">REPORTS</span></div>
+        <div class="brief-stat"><span class="bs-num" id="brief-time">2:45</span><span class="bs-lab">SHIFT CLOCK</span></div>
+        <div class="brief-stat"><span class="bs-num" id="brief-qc">6</span><span class="bs-lab">QC TOLERANCE</span></div>
+      </div>
+      <button class="btn btn-primary" id="btn-start-shift">Begin shift</button>
+    </div>
+  </section>
+
+  <!-- ====================== GAME ====================== -->
+  <section class="screen" id="screen-game">
+    <!-- HUD -->
+    <header class="hud">
+      <div class="hud-left">
+        <span class="logo-mark sm" aria-hidden="true"></span>
+        <div class="hud-shift"><span id="hud-shift-no">SHIFT 1</span><small id="hud-shift-title">Orientation</small></div>
+      </div>
+      <div class="hud-center">
+        <div class="hud-stat"><span class="hs-num" id="hud-score">0</span><span class="hs-lab">SCORE</span></div>
+        <div class="hud-stat"><span class="hs-num" id="hud-combo">×1</span><span class="hs-lab">COMBO</span></div>
+        <div class="hud-stat"><span class="hs-num" id="hud-acc">100%</span><span class="hs-lab">ACCURACY</span></div>
+        <div class="hud-stat hud-qc"><span class="hs-num" id="hud-qc">QC</span>
+          <span class="qc-pips" id="qc-pips"></span></div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-clock" id="hud-clock">2:45</div>
+        <button class="hud-btn" id="btn-codex-game" title="Lab reference">REF</button>
+        <button class="hud-btn" id="btn-pause" title="Pause">II</button>
+      </div>
+    </header>
+
+    <!-- Intake: the patient report -->
+    <div class="intake" id="intake">
+      <div class="intake-head">
+        <div class="accession">
+          <span class="acc-no" id="acc-no">VW-000000-0000</span>
+          <span class="acc-patient" id="acc-patient">Patient</span>
+        </div>
+        <div class="panel-badge" id="panel-badge">PANEL</div>
+      </div>
+      <p class="panel-blurb" id="panel-blurb"></p>
+      <div class="intake-foot">
+        <div class="specimen-rack" id="specimen-rack" aria-label="Specimens collected"></div>
+        <div class="report-progress">
+          <span id="report-progress-text">0 / 0 routed</span>
+          <div class="rp-bar"><div class="rp-fill" id="rp-fill"></div></div>
+        </div>
+      </div>
+      <div class="queue-pill" id="queue-pill">REPORT 1 / 6</div>
+    </div>
+
+    <!-- Tray: aliquots to route -->
+    <div class="tray-wrap">
+      <div class="tray-label">AWAITING ALIQUOT ROUTING</div>
+      <div class="tray" id="tray"></div>
+    </div>
+
+    <!-- Bench: the analyzers -->
+    <div class="bench" id="bench"></div>
+
+    <!-- floating held aliquot -->
+    <div class="held" id="held" aria-hidden="true"></div>
+    <!-- toast / hint -->
+    <div class="toast" id="toast" aria-live="polite"></div>
+  </section>
+
+  <!-- ====================== RESULTS ====================== -->
+  <section class="screen" id="screen-results">
+    <div class="results-card">
+      <div class="results-eyebrow" id="results-eyebrow">SHIFT 1 COMPLETE</div>
+      <div class="grade-ring" id="grade-ring">
+        <span class="grade-letter" id="grade-letter">A</span>
+        <span class="grade-label" id="grade-label">Validated run</span>
+      </div>
+      <div class="results-grid">
+        <div class="rstat"><span class="rs-num" id="res-acc">100%</span><span class="rs-lab">ACCURACY</span></div>
+        <div class="rstat"><span class="rs-num" id="res-score">0</span><span class="rs-lab">SCORE</span></div>
+        <div class="rstat"><span class="rs-num" id="res-routed">0</span><span class="rs-lab">ALIQUOTS RUN</span></div>
+        <div class="rstat"><span class="rs-num" id="res-best">×1</span><span class="rs-lab">BEST COMBO</span></div>
+        <div class="rstat"><span class="rs-num" id="res-tat">0:00</span><span class="rs-lab">TURNAROUND</span></div>
+        <div class="rstat"><span class="rs-num" id="res-misroute">0</span><span class="rs-lab">MISROUTES</span></div>
+      </div>
+      <p class="results-note" id="results-note"></p>
+      <div class="results-actions">
+        <button class="btn btn-primary" id="btn-continue">Next shift</button>
+        <button class="btn btn-ghost" id="btn-retry">Retry shift</button>
+        <button class="btn btn-ghost" id="btn-quit">Main menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== CODEX MODAL ====================== -->
+  <div class="modal-veil" id="modal-codex" aria-hidden="true">
+    <div class="modal" role="dialog" aria-label="Lab reference">
+      <div class="modal-head">
+        <h3>Lab Reference</h3>
+        <button class="modal-x" id="btn-codex-close" aria-label="Close">✕</button>
+      </div>
+      <p class="modal-intro">Each molecule class runs on exactly one analyzer. Match the marker to its machine.</p>
+      <div class="codex-list" id="codex-list"></div>
+      <p class="modal-foot">Tip: a patient report can span several analyzers — route each aliquot on its own.</p>
+    </div>
+  </div>
+
+  <!-- ====================== HOW TO PLAY MODAL ====================== -->
+  <div class="modal-veil" id="modal-how" aria-hidden="true">
+    <div class="modal" role="dialog" aria-label="How to play">
+      <div class="modal-head">
+        <h3>How to Play</h3>
+        <button class="modal-x" id="btn-how-close" aria-label="Close">✕</button>
+      </div>
+      <ol class="how-list">
+        <li><b>Read the report.</b> Each patient kit lists a panel, the specimens collected, and a tray of aliquots — one per biomarker.</li>
+        <li><b>Pick up an aliquot.</b> Click (or drag) a marker card. It shows the <i>molecule class</i> and its <i>specimen</i>.</li>
+        <li><b>Route it to the right analyzer.</b> Click the machine that runs that molecule class. Antibodies → Immunochip, small molecules → LC-MS/MS, metals → ICP-MS, DNA/RNA → PCR, GI proteins → ELISA, routine chemistry → Chemistry.</li>
+        <li><b>Mind multi-method reports.</b> A Gut Zoomer or Total Tox Burden spans several analyzers — you can't send the whole report to one machine.</li>
+        <li><b>Keep accuracy high.</b> Correct routes build a combo multiplier and speed bonus. Misroutes cost QC tolerance — run out and the shift goes on QC hold.</li>
+      </ol>
+      <button class="btn btn-primary" id="btn-how-go">Got it</button>
+    </div>
+  </div>
+
+  <!-- ====================== PAUSE MODAL ====================== -->
+  <div class="modal-veil" id="modal-pause" aria-hidden="true">
+    <div class="modal modal-sm" role="dialog" aria-label="Paused">
+      <div class="modal-head"><h3>Shift Paused</h3></div>
+      <div class="pause-actions">
+        <button class="btn btn-primary" id="btn-resume">Resume</button>
+        <button class="btn btn-ghost" id="btn-pause-codex">Lab reference</button>
+        <button class="btn btn-ghost" id="btn-pause-quit">Abandon shift</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="src/game.js"></script>
+</body>
+</html>

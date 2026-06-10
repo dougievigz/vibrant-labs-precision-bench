@@ -1,0 +1,14 @@
+{
+  "name": "vibrant-labs-precision-bench",
+  "version": "1.0.0",
+  "description": "Educational lab-science game: route each Vibrant Wellness biomarker to the correct analyzer by molecule class and specimen type.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "python3 -m http.server 4178",
+    "dev": "python3 -m http.server 4178"
+  },
+  "keywords": ["game", "laboratory", "diagnostics", "vibrant-wellness", "education", "biomarkers"],
+  "license": "MIT",
+  "author": "Doug Vigliano"
+}

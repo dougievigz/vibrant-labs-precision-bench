@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / tooling
+.vscode/
+.idea/
+.claude/
+
+# Vercel
+.vercel/
+
+# Node (none used, but just in case)
+node_modules/
+npm-debug.log*
